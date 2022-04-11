@@ -5,25 +5,14 @@ is_admin();
 
 // Get the value and assign it to a local variable
 $id = $_GET['employee_id'];
-$employee = find_employee_by_id($id);
 
 if(is_post_request()) {
 
-  $sql = "DELETE FROM employee ";
-  $sql .= "WHERE employee_id=' " . $id . "' ";
-  $sql .= "LIMIT 1";
-  $result = mysqli_query($db, $sql);
-  // For delete statements the result is true/false
+  delete_employee($id);
+  redirect_to(url_for('/staff/admin/employee_list.php'));
 
-  if($result) {
-    echo "Employees was deleted";
-    redirect_to(url_for('/staff/admin/employee_list.php'));
-  } else {
-    // the delete failed
-    echo mysqli_error($db);
-    db_disconnect($db);
-    exit;
-  }
+} else {
+  $employee = find_employee_by_id($id);
 }
 
 ?>

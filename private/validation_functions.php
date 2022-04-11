@@ -22,6 +22,7 @@
   // * spaces count towards length
   // * use trim() if spaces should not count
   function has_length_greater_than($value, $min) {
+    // trim($value) === '';
     $length = strlen($value);
     return $length > $min;
   }

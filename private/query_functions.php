@@ -42,14 +42,19 @@ function find_employee_by_username($username) {
 }
 
 function validate_employee($employee, $options=[]) {
+  $errors = [];
   $password_required = $options['password_required'] ?? true;
   
+  // Employee names length and not blank---might remove elseif
   if(is_blank($employee['first_name'])) {
     $errors[] = "First name cannot be blank.";
-  } 
-
+  } elseif(!has_length($employee['first_name'], ['min' => 2, 'max' => 255])) {
+    $errors[] = "First name must be between 2 and 255 characters.";
+  }
   if(is_blank($employee['last_name'])) {
     $errors[] = "Last name cannot be blank.";
+  } elseif(!has_length($employee['last_name'], ['min' => 2, 'max' => 255])) {
+    $errors[] = "Last name must be between 2 and 255 characters.";
   }
 
   if(is_blank($employee['email'])) {
@@ -94,11 +99,12 @@ function validate_employee($employee, $options=[]) {
 
 function insert_employee($employee) {
   global $db;
-  // $errors = validate_employee($employee);
-  // if (!empty($errors)) {
-  //   return $errors;
-  // }
-
+  //This does the validations and returns errors
+  $errors = validate_employee($employee);
+  if(!empty($errors)) {
+    return $errors;
+  }
+  // If there are errors the update does not run
   $hashed_password = password_hash($employee['password'], PASSWORD_DEFAULT);
 
   $sql = "INSERT INTO employee ";
@@ -125,15 +131,15 @@ function insert_employee($employee) {
   }
 }
 
-// CREATE A USER ACCOUNT
+// CREATE A USER ACCOUNT THE VALIDATION ISN'T WORKING RIGHT
 function create_user_account($employee) {
   global $db;
-
-  // $errors = validate_employee($employee);
-  // if(!empty($errors)) {
-  //   return $errors;
-  // }
-
+  //This does the validations and returns errors
+  $errors = validate_employee($employee);
+  if(!empty($errors)) {
+    return $errors;
+  }
+  // If there are errors the update does not run
   $hashed_password = password_hash($employee['password'], PASSWORD_DEFAULT);
 
   $sql = "INSERT INTO employee ";
@@ -157,44 +163,14 @@ function create_user_account($employee) {
   }
 }
 
-// AN ARRAY IS PASSED IN HERE
-// function update_employee($employee) {
-//   global $db;
-//   $password_sent = !is_blank($employee['password']);
-
-//   $errors = validate_employee($employee, ['password_required' => $password_sent]);
-//   // if(!empty($errors)) {
-//   //   return $errors;
-//   // }
-//   $hashed_password = password_hash($employee['password'], PASSWORD_DEFAULT);
-
-//   $sql = "UPDATE employee SET ";
-//   $sql .= "first_name='" . $employee['first_name'] . "',";
-//   $sql .= "last_name='" . $employee['last_name'] . "',";
-//   $sql .= "user_level='" . $employee['user_level'] . "',";
-//   $sql .= "department_initial='" . $employee['department_initial'] . "',";
-//   $sql .= "email='" . $employee['email'] . "',";
-//   if($password_sent) {
-//     $sql .= "hashed_password='" . $hashed_password . "', ";
-//   }
-//   $sql .= "username='" . $employee['username'] . "' ";
-//   $sql .= "WHERE employee_id='" . $employee['employee_id'] . "' ";
-//   $sql .= "LIMIT 1";
-
-//   $result = mysqli_query($db, $sql);
-//   // FOR UPDATE STATEMENTS THE RESULT IS TRUE/FALSE
-//   if($result) {
-//     return true;
-//   } else {
-//     // THE UPDATE FAILED
-//     echo mysqli_error($db);
-//     db_disconnect($db);
-//     exit;
-//   }
-// }
-
 function update_employee($employee, $id) {
   global $db;
+  //This does the validations and returns errors
+  $errors = validate_employee($employee);
+  if(!empty($errors)) {
+    return $errors;
+  }
+  // If there are errors the update does not run
   $sql = "UPDATE employee SET ";
   $sql .= "first_name='" . $employee['first_name'] . "',";
   $sql .= "last_name='" . $employee['last_name'] . "',";
@@ -214,20 +190,20 @@ function update_employee($employee, $id) {
   }
 }
 
-// I WILL LOOK AT THIS LATER, I AM NOT RUNNING DELETE STATEMENTS YET
 function delete_employee($id) {
   global $db;
 
   $sql = "DELETE FROM employee ";
-  $sql .= "WHERE employee_id='" . $id . "' ";
+  $sql .= "WHERE employee_id=' " . $id . "' ";
   $sql .= "LIMIT 1";
   $result = mysqli_query($db, $sql);
-
-  // For DELETE statements, $result is true/false
+  // For delete statements the result is true/false
   if($result) {
+    // I don't think this runs, look at this later
+    echo "Employees was deleted";
     return true;
   } else {
-    // DELETE failed
+    // the delete failed
     echo mysqli_error($db);
     db_disconnect($db);
     exit;

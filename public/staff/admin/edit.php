@@ -21,9 +21,15 @@ if(is_post_request()) {
   $employee['username'] = $_POST['username'] ?? '';
   $employee['password'] = $_POST['password'] ?? '';
   $employee['confirm_password'] = $_POST['confirm_password'] ?? '';
-
+  //Could call the validation function here
   $result = update_employee($employee, $id);
-  redirect_to(url_for('staff/admin/show.php?employee_id=' . $id));
+  if($result === true) {
+    redirect_to(url_for('staff/admin/show.php?employee_id=' . $id));
+  } else {
+    $errors = $result;
+    var_dump($errors);
+  }
+  
 
 } else {
   $employee = find_employee_by_id($id);
