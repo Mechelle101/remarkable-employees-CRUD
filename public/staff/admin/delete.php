@@ -11,8 +11,22 @@ if(is_post_request()) {
   delete_employee($id);
   redirect_to(url_for('/staff/admin/employee_list.php'));
 
+<<<<<<< HEAD
 } else {
   $employee = find_employee_by_id($id);
+=======
+  if($result) {
+    // this is not showing up, maybe because If it is deleted then theres nothing in result maybe??
+    echo "Employees was deleted";
+    echo display_session_message(); 
+    redirect_to(url_for('/staff/admin/employee_list.php'));
+  } else {
+    // the delete failed
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+  }
+>>>>>>> dev
 }
 
 ?>
@@ -81,8 +95,8 @@ if(is_post_request()) {
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>

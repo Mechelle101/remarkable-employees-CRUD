@@ -8,6 +8,7 @@ function find_all_employees() {
   return $result;
 }
 
+// This is to query only employees not admins
 function find_only_employees() {
   global $db;
   $sql = "SELECT * FROM employee ";
@@ -41,6 +42,31 @@ function find_employee_by_username($username) {
   return $employee; // return the assoc. array
 }
 
+// This function was changed to leave off the username and pw validation
+function validate_updated_employee($employee, $options=[]) {
+
+  $errors = [];
+  
+  if(is_blank($employee['first_name'])) {
+    $errors[] = "First name cannot be blank.";
+  } 
+
+  if(is_blank($employee['last_name'])) {
+    $errors[] = "Last name cannot be blank.";
+  }
+
+  if(is_blank($employee['email'])) {
+    $errors[] = "Email cannot be blank.";
+  } elseif (!has_length($employee['email'], array('max' => 255))) {
+    $errors[] = "Email must be less than 255 characters.";
+  } elseif (!has_valid_email_format($employee['email'])) {
+    $errors[] = "Email must be a valid format.";
+  }
+
+  return $errors;
+}
+
+// This is to validate the inserted employee
 function validate_employee($employee, $options=[]) {
   $errors = [];
   $password_required = $options['password_required'] ?? true;
@@ -97,14 +123,23 @@ function validate_employee($employee, $options=[]) {
   return $errors;
 }
 
+// ADMIN ADDS AN EMPLOYEE
 function insert_employee($employee) {
   global $db;
+<<<<<<< HEAD
   //This does the validations and returns errors
+=======
+
+>>>>>>> dev
   $errors = validate_employee($employee);
   if(!empty($errors)) {
     return $errors;
   }
+<<<<<<< HEAD
   // If there are errors the update does not run
+=======
+
+>>>>>>> dev
   $hashed_password = password_hash($employee['password'], PASSWORD_DEFAULT);
 
   $sql = "INSERT INTO employee ";
@@ -134,14 +169,19 @@ function insert_employee($employee) {
 // CREATE A USER ACCOUNT THE VALIDATION ISN'T WORKING RIGHT
 function create_user_account($employee) {
   global $db;
+<<<<<<< HEAD
   //This does the validations and returns errors
+=======
+>>>>>>> dev
   $errors = validate_employee($employee);
   if(!empty($errors)) {
     return $errors;
   }
+<<<<<<< HEAD
   // If there are errors the update does not run
+=======
+>>>>>>> dev
   $hashed_password = password_hash($employee['password'], PASSWORD_DEFAULT);
-
   $sql = "INSERT INTO employee ";
   $sql .= "(first_name, last_name, email,  username, hashed_password) ";
   $sql .= "VALUES (";
@@ -153,16 +193,18 @@ function create_user_account($employee) {
   $sql .= ")";
   $result = mysqli_query($db, $sql);
   // FOR INSERT STATEMENTS INSERT RETURNS TRUE/FALSE
-  if($result)  {
+  if($result === true) {
+    $_SESSION['message'] = 'The account was created successfully.';
     return true;
   } else {
-    // IF THE INSERT FAILED
-    echo mysqli_error($db);
-    db_disconnect($db);
-    exit;
+    $errors = $result;
+    // var_dump($errors);
+    //echo mysqli_error($db);
+
   }
 }
 
+<<<<<<< HEAD
 function update_employee($employee, $id) {
   global $db;
   //This does the validations and returns errors
@@ -171,6 +213,15 @@ function update_employee($employee, $id) {
     return $errors;
   }
   // If there are errors the update does not run
+=======
+// ADMIN UPDATES AN EMPLOYEE
+function update_employee($employee, $id) {
+  global $db;
+  $errors = validate_updated_employee($employee);
+  if(!empty($errors)) {
+    return $errors;
+  }
+>>>>>>> dev
   $sql = "UPDATE employee SET ";
   $sql .= "first_name='" . $employee['first_name'] . "',";
   $sql .= "last_name='" . $employee['last_name'] . "',";
@@ -190,6 +241,10 @@ function update_employee($employee, $id) {
   }
 }
 
+<<<<<<< HEAD
+=======
+// ADMIN DELETING AN ACCOUNT
+>>>>>>> dev
 function delete_employee($id) {
   global $db;
 
@@ -222,7 +277,6 @@ function find_announcement_by_id($id) {
   global $db;
   $sql = "SELECT * FROM announcement ";
   $sql .= "WHERE announcement_id='" . $id . "'";
-  echo $sql;
   $result = mysqli_query($db, $sql);
   confirm_result_set($result);
   $subject = mysqli_fetch_assoc($result);
@@ -230,13 +284,13 @@ function find_announcement_by_id($id) {
   return $subject; // return the assoc. array
 }
 
-function insert_announcement($announcement, $date) {
+function insert_announcement($announcement) {
   global $db; 
   $sql = "INSERT INTO announcement ";
-  $sql .= "(announcement, date) ";
+  $sql .= "(announcement, employee_id) ";
   $sql .= "VALUES (";
   $sql .= "'" . $announcement['announcement'] . "',";
-  $sql .= "'" . $date['date'] . "'";
+  $sql .= "'" . $announcement['employee_id'] . "'";
   $sql .= ")";
 
   $result = mysqli_query($db, $sql);

@@ -2,6 +2,30 @@
 require_once('../../../private/initialize.php'); 
 require_login();
 is_admin();
+
+if(is_post_request()) {
+  $employee = [];
+  $employee['first_name'] = $_POST['first_name'] ?? '';
+  $employee['last_name'] = $_POST['last_name'] ?? '';
+  $employee['user_level'] = $_POST['user_level'] ?? '';
+  $employee['department_initial'] = $_POST['department_initial'] ?? '';
+  $employee['email'] = $_POST['email'] ?? '';
+  $employee['username'] = $_POST['username'] ?? '';
+  $employee['password'] = $_POST['password'] ?? '';
+  $employee['confirm_password'] = $_POST['confirm_password'] ?? '';
+
+  // EDIT THE QUERY TO ADD THE USER CREDENTIALS
+  $result = insert_employee($employee);
+  if($result === true) {
+  $new_id = mysqli_insert_id($db);
+  $_SESSION['message'] = 'The employee was created successfully.';
+  redirect_to(url_for('staff/admin/show.php?employee_id=' . $new_id));
+  } else {
+    $errors = $result;
+  }
+
+} 
+
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +74,8 @@ is_admin();
           </div>
           <hr>
           <div>
-            <form action="<?php echo url_for('/staff/admin/create.php');  ?>" method="post">
+            <?php echo display_errors($errors); ?>
+            <form action="<?php echo url_for('/staff/admin/new.php');  ?>" method="post">
               <label for="first_name">First Name</label><br>
               <input type="text" id="first_name" name="first_name" value=""><br>
               <br>
@@ -91,8 +116,8 @@ is_admin();
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>

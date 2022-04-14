@@ -3,6 +3,40 @@
 require_once('../../private/initialize.php'); 
 require_login();
 
+$logged_in_employee = $_SESSION['logged_employee_id'];
+
+//CREATING A NEW ANNOUNCEMENT
+if(is_post_request()) {
+  $announcement = [];
+  $announcement['announcement_id'] = $_POST['announcement_id'] ?? '';
+  $announcement['announcement'] = $_POST['announcement'] ?? '';
+  $announcement['employee_id'] = $logged_in_employee ?? '';
+  
+  // CREATING A NEW ANNOUNCEMENT 
+  $sql = "INSERT INTO announcement ";
+  $sql .= "(announcement, employee_id) ";
+  $sql .= "VALUES (";
+  $sql .= "'" . $announcement['announcement'] . "',";
+  $sql .= "'" . $announcement['employee_id'] . "'";
+  $sql .= ")";
+
+  insert_announcement($announcement);
+  $result = mysqli_query($db, $sql);
+
+  if($result == true) {
+    $new_id = mysqli_insert_id($db);
+    $_SESSION['message'] = 'You have created your announcement successfully.';
+  
+  } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+  }
+
+}
+
+$id = $_GET['announcement_id'] ?? '1';
+$announcement = find_announcement_by_id($id);
 
 ?>
 
@@ -47,23 +81,24 @@ require_login();
         <article id="description">
           <div>
             <?php echo display_session_message(); ?>
-            <h1>Reminders &amp; Announcements</h1>
-            <p>The announcement will show above or below the input field</p>
-
-            <form action="<?php echo url_for('staff/admin/announcements.php'); ?>" method="post">
-              <label for="announcement">Announcement</label><br>
-              <textarea id="announcement" name="announcement" rows="5" cols="">
-              </textarea>
-              <br>
-              <input type="submit" name="submit" value="Post"><br>
+            <div class="attributes">
+              <h1>Reminders &amp; Announcements</h1>
+              <p><?php echo h($announcement['announcement']); ?></p>
+            </div>
+            <hr>
+            <h1>Post Your Announcements Here</h1>
+            <!-- Updating the announcement table... Then pulling from that tbl date('F j, Y, g:i a');-->
+            <form action="<?php echo url_for('/staff/admin/announcements.php'); ?>" method="post">
+              <input type='hidden' id="date" name='date' value="<?php  ?>"><br>
+              <label for="announcement">Post Announcement Here</label>
+              <input type='hidden' name="announcement" value="<?php  ?>"><br>
+              <textarea id="announcement" name='announcement' rows="5" cols="30"></textarea><br>
+              <button type='submit' name='submit'>Add Comment</button>
             </form>
           </div>
           <hr>
           <div>
             <h1>The live calendar goes here</h1>
-            <p>--------------------------------</p>
-            <p>--------------------------------</p>
-            <p>--------------------------------</p>
             <p>--------------------------------</p>
             <p>--------------------------------</p>
           </div>
@@ -76,8 +111,8 @@ require_login();
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>

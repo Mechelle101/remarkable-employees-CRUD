@@ -21,7 +21,7 @@ if(is_post_request()) {
   $subject['start_date'] = $_POST['start_date'] ?? '';
   $subject['user_level'] = $_POST['user_level'] ?? '';
 
-  $result = update_employee($subject);
+  $result = update_employee($subject, $id);
   redirect_to(url_for('staff/show.php?employee_id=' . $subject['employee_id']));
 
 } else {
@@ -105,8 +105,8 @@ if(is_post_request()) {
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>
