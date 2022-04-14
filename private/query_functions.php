@@ -13,8 +13,6 @@ function find_only_employees() {
   global $db;
   $sql = "SELECT * FROM employee ";
   $sql .= "WHERE user_level='employee' ";
-  // TO CHECK IF YOUR QUERY IS WORKING
-  // echo $sql;
   $result = mysqli_query($db, $sql);
   confirm_result_set($result);
   return $result;
@@ -28,7 +26,7 @@ function find_employee_by_id($id) {
   confirm_result_set($result);
   $subject = mysqli_fetch_assoc($result);
   mysqli_free_result($result);
-  return $subject; // return the assoc. array
+  return $subject; 
 }
 
 function find_employee_by_username($username) {
@@ -44,9 +42,7 @@ function find_employee_by_username($username) {
 
 // This function was changed to leave off the username and pw validation
 function validate_updated_employee($employee, $options=[]) {
-
-  $errors = [];
-  
+  $errors = []; 
   if(is_blank($employee['first_name'])) {
     $errors[] = "First name cannot be blank.";
   } 
@@ -71,12 +67,16 @@ function validate_employee($employee, $options=[]) {
   $errors = [];
   $password_required = $options['password_required'] ?? true;
   
+  // Employee names length and not blank---might remove elseif
   if(is_blank($employee['first_name'])) {
     $errors[] = "First name cannot be blank.";
-  } 
-
+  } elseif(!has_length($employee['first_name'], ['min' => 2, 'max' => 255])) {
+    $errors[] = "First name must be between 2 and 255 characters.";
+  }
   if(is_blank($employee['last_name'])) {
     $errors[] = "Last name cannot be blank.";
+  } elseif(!has_length($employee['last_name'], ['min' => 2, 'max' => 255])) {
+    $errors[] = "Last name must be between 2 and 255 characters.";
   }
 
   if(is_blank($employee['email'])) {
@@ -122,7 +122,6 @@ function validate_employee($employee, $options=[]) {
 // ADMIN ADDS AN EMPLOYEE
 function insert_employee($employee) {
   global $db;
-
   $errors = validate_employee($employee);
   if(!empty($errors)) {
     return $errors;
@@ -154,9 +153,10 @@ function insert_employee($employee) {
   }
 }
 
-// CREATE A USER ACCOUNT
+// CREATE A USER ACCOUNT THE VALIDATION ISN'T WORKING RIGHT
 function create_user_account($employee) {
   global $db;
+  //This does the validations and returns errors
   $errors = validate_employee($employee);
   if(!empty($errors)) {
     return $errors;
@@ -215,15 +215,16 @@ function delete_employee($id) {
   global $db;
 
   $sql = "DELETE FROM employee ";
-  $sql .= "WHERE employee_id='" . $id . "' ";
+  $sql .= "WHERE employee_id=' " . $id . "' ";
   $sql .= "LIMIT 1";
   $result = mysqli_query($db, $sql);
-
-  // For DELETE statements, $result is true/false
+  // For delete statements the result is true/false
   if($result) {
+    // I don't think this runs, look at this later
+    echo "Employees was deleted";
     return true;
   } else {
-    // DELETE failed
+    // the delete failed
     echo mysqli_error($db);
     db_disconnect($db);
     exit;
