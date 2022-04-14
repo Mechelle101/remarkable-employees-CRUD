@@ -13,8 +13,6 @@ function find_only_employees() {
   global $db;
   $sql = "SELECT * FROM employee ";
   $sql .= "WHERE user_level='employee' ";
-  // TO CHECK IF YOUR QUERY IS WORKING
-  // echo $sql;
   $result = mysqli_query($db, $sql);
   confirm_result_set($result);
   return $result;
@@ -28,7 +26,7 @@ function find_employee_by_id($id) {
   confirm_result_set($result);
   $subject = mysqli_fetch_assoc($result);
   mysqli_free_result($result);
-  return $subject; // return the assoc. array
+  return $subject; 
 }
 
 function find_employee_by_username($username) {
@@ -44,9 +42,7 @@ function find_employee_by_username($username) {
 
 // This function was changed to leave off the username and pw validation
 function validate_updated_employee($employee, $options=[]) {
-
-  $errors = [];
-  
+  $errors = []; 
   if(is_blank($employee['first_name'])) {
     $errors[] = "First name cannot be blank.";
   } 
@@ -127,9 +123,12 @@ function validate_employee($employee, $options=[]) {
 function insert_employee($employee) {
   global $db;
 <<<<<<< HEAD
+<<<<<<< HEAD
   //This does the validations and returns errors
 =======
 
+>>>>>>> dev
+=======
 >>>>>>> dev
   $errors = validate_employee($employee);
   if(!empty($errors)) {
@@ -170,8 +169,12 @@ function insert_employee($employee) {
 function create_user_account($employee) {
   global $db;
 <<<<<<< HEAD
+<<<<<<< HEAD
   //This does the validations and returns errors
 =======
+>>>>>>> dev
+=======
+  //This does the validations and returns errors
 >>>>>>> dev
   $errors = validate_employee($employee);
   if(!empty($errors)) {
