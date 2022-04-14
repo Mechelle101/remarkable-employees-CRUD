@@ -32,6 +32,7 @@
   
   // putting the database connection in a variable
   $db = db_connect();
+  $errors = [];
 
   // once I create a footer file 
   // call the db_disconnect() 

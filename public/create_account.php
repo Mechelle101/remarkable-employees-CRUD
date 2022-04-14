@@ -2,7 +2,7 @@
 require_once('../private/initialize.php');
 
 if(is_post_request()) {
-  $subject = [];
+  $employee = [];
   $employee['first_name'] = $_POST['first_name'] ?? '';
   $employee['last_name'] = $_POST['last_name'] ?? '';
   $employee['email'] = $_POST['email'] ?? '';
@@ -11,16 +11,11 @@ if(is_post_request()) {
   $employee['confirm_password'] = $_POST['confirm_password'] ?? '';
 
   $result = create_user_account($employee);
-  if($result == true) {
+  if($result === true) {
     $new_employee = find_employee_by_username($employee['username']);
     log_in_employee($new_employee);
     $new_id = mysqli_insert_id($db);
-    $_SESSION['message'] = 'You have created your account successfully.';
-    if($employee['user_level'] == 'admin') {
-      redirect_to(url_for('staff/admin/show.php?employee_id=' . $new_employee['employee_id']));
-    } else {
-      redirect_to(url_for('staff/show.php?employee_id=' . $new_employee['employee_id']));
-    }
+    redirect_to(url_for('staff/show.php?employee_id=' . $new_employee['employee_id']));
   } else {
     $errors = $result;
   }
@@ -78,6 +73,7 @@ if(is_post_request()) {
           </div>
           <hr>
           <div>
+          <?php echo display_errors($errors); ?>
           <form action="<?php echo url_for('create_account.php'); ?>" method="post">
             <label for="first_name">First Name</label><br>
             <input type="text" id="first_name" name="first_name" value=""><br>
@@ -112,8 +108,8 @@ if(is_post_request()) {
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>

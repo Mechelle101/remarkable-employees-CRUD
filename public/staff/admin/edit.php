@@ -21,9 +21,13 @@ if(is_post_request()) {
   $employee['username'] = $_POST['username'] ?? '';
   $employee['password'] = $_POST['password'] ?? '';
   $employee['confirm_password'] = $_POST['confirm_password'] ?? '';
-
+  // Could do form validations here...although best to do it in the function below
   $result = update_employee($employee, $id);
-  redirect_to(url_for('staff/admin/show.php?employee_id=' . $id));
+  if($result === true) {
+    redirect_to(url_for('staff/admin/show.php?employee_id=' . $id));
+  } else {
+    $errors = $result;
+  }
 
 } else {
   $employee = find_employee_by_id($id);
@@ -76,6 +80,7 @@ if(is_post_request()) {
           </div>
           <hr>
           <div>
+            <?php echo display_errors($errors); ?>
             <form action="<?php echo url_for('/staff/admin/edit.php?employee_id=' . h(u($id))); ?>" method="post">
               <label for="first_name">First Name</label><br>
               <input type="text" id="first_name" name="first_name" value="<?php echo h($employee['first_name']); ?>"><br>
@@ -112,8 +117,8 @@ if(is_post_request()) {
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>

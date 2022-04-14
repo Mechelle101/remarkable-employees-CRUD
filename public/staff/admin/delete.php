@@ -16,7 +16,9 @@ if(is_post_request()) {
   // For delete statements the result is true/false
 
   if($result) {
+    // this is not showing up, maybe because If it is deleted then theres nothing in result maybe??
     echo "Employees was deleted";
+    echo display_session_message(); 
     redirect_to(url_for('/staff/admin/employee_list.php'));
   } else {
     // the delete failed
@@ -92,8 +94,8 @@ if(is_post_request()) {
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>

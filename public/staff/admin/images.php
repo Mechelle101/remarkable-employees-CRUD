@@ -46,6 +46,12 @@ is_admin();
           <div>
             <?php echo display_session_message(); ?>
             <h1>You Can Add Images</h1>
+
+            <form action=" " enctype="multipart/form-data" method="post">
+              <p>Upload Your Images Here</p>
+              <input type="file" name="fileUpload" id="fileUpload">
+              <input type="submit" value="Upload Image" name="Upload Image">
+            </form>
             <p>Images Will Show Below.</p>
           </div>
           <hr>
@@ -65,8 +71,8 @@ is_admin();
         </div>
         <div id="chamber">
           <h4>Chamber of Commerce Links</h4>
-          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE">Asheville Chamber of Commerce</a></p>
-          <p><a href="https://www.uschamber.com/">US Chamber of Commerce</a></p>
+          <p><a href="https://www.ashevillechamber.org/news-events/events/wnc-career-expo/?gclid=EAIaIQobChMI--vY9Jfk9gIVBLLICh1_2gFFEAAYASAAEgJtifD_BwE" target="_blank">Asheville Chamber of Commerce</a></p>
+          <p><a href="https://www.uschamber.com/" target="_blank">US Chamber of Commerce</a></p>
         </div>
       </footer>
     </div>
